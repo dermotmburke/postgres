@@ -31,7 +31,7 @@ fi
 if [ "$1" = 'postgres' ] && [ "$(id -u)" = '0' ]; then
 	mkdir -p "$PGDATA"
 	chown -R postgres "$PGDATA"
-	chmod 700 "$PGDATA"
+	chmod 777 "$PGDATA"
 
 	mkdir -p /var/run/postgresql
 	chown -R postgres /var/run/postgresql
@@ -58,7 +58,15 @@ if [ "$1" = 'postgres' ]; then
 		if [ "$POSTGRES_INITDB_XLOGDIR" ]; then
 			export POSTGRES_INITDB_ARGS="$POSTGRES_INITDB_ARGS --xlogdir $POSTGRES_INITDB_XLOGDIR"
 		fi
-		eval "initdb --username=postgres $POSTGRES_INITDB_ARGS"
+
+		#echo "*** Hack initdb ***"
+		#rm -rf /tmp/init
+ 		#mkdir -p /tmp/init && chmod 700 /tmp/init && chown -R "$(id -u)" /tmp/init
+ 		#eval "gosu postgres initdb -D /tmp/init $POSTGRES_INITDB_ARGS"
+ 		#mv /tmp/init/* $PGDATA/
+ 		#echo "*** Finish Hack initdb ***"
+
+		eval "initdb --debug --noclean --username=postgres $POSTGRES_INITDB_ARGS"
 
 		# check password first so we can output the warning before postgres
 		# messes it up
