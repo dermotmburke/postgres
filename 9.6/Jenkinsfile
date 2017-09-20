@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr:'10'))
+    }
+    stages {
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    new docker().login('registryCredentials')
+                    docker.withRegistry("${env.DOCKER_REGISTRY_URL}",'registryCredentials') {
+                        def image = docker.build("dermotburke/postgres",'.')
+                        image.push()
+                    }
+                }
+            }
+        }
+    }
+}

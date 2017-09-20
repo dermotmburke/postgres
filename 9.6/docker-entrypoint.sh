@@ -59,12 +59,12 @@ if [ "$1" = 'postgres' ]; then
 			export POSTGRES_INITDB_ARGS="$POSTGRES_INITDB_ARGS --xlogdir $POSTGRES_INITDB_XLOGDIR"
 		fi
 
-		#echo "*** Hack initdb ***"
-		#rm -rf /tmp/init
- 		#mkdir -p /tmp/init && chmod 700 /tmp/init && chown -R "$(id -u)" /tmp/init
- 		#eval "gosu postgres initdb -D /tmp/init $POSTGRES_INITDB_ARGS"
- 		#mv /tmp/init/* $PGDATA/
- 		#echo "*** Finish Hack initdb ***"
+		echo "*** Hack initdb ***"
+		rm -rf /tmp/init
+ 		mkdir -p /tmp/init && chmod 700 /tmp/init && chown -R "$(id -u)" /tmp/init
+ 		eval "gosu postgres initdb -D /tmp/init $POSTGRES_INITDB_ARGS"
+ 		mv /tmp/init/* $PGDATA/
+ 		echo "*** Finish Hack initdb ***"
 
 		eval "initdb --debug --noclean --username=postgres $POSTGRES_INITDB_ARGS"
 
